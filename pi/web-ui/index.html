@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Tetris Controller</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <style type="text/css">
+
+      button {
+        display: block;
+        height: 200px;
+        background-color: #ddd;
+        border: 1px solid #aaa;
+      }
+
+    </style>
+    <script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/js/fastclick.js"></script>
+    <script type="text/javascript">
+      document.ontouchmove = function(event) {
+        event.preventDefault();
+      }
+
+      $(function() {
+        FastClick.attach(document.body);
+
+        var socket = io();
+
+        function prepareKey(id) {
+          $('#' + id).click(function() {
+            socket.emit('button', id);
+          });
+        }
+        prepareKey('1');
+        prepareKey('2');
+        prepareKey('l');
+        prepareKey('d');
+        prepareKey('r');
+
+        socket.on('playerId', function(playerId) {
+          var q = $('h1');
+          if (playerId == null) {
+            q.text('Sorry, you\'re too late!');
+          } else {
+            q.text('Player ' + (playerId + 1));
+          }
+        });
+
+      });
+    </script>
+  </head>
+  <body>
+    <h1>connecting...</h1>
+    <button id="l" class="col-xs-2">&lt;</button>
+    <button id="d" class="col-xs-2">v</button>
+    <button id="r" class="col-xs-2">&gt;</button>
+    <button id="1" class="col-xs-2">A</button>
+    <button id="2" class="col-xs-2">B</button>
+  </body>
+</html>
